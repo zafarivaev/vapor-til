@@ -11,21 +11,4 @@ public func routes(_ router: Router) throws {
     router.get("hello") { req in
         return "Hello, world!"
     }
-    
-    router.post("api", "acronyms") { req -> Future<Acronym> in
-        return try req.content.decode(Acronym.self)
-            .flatMap(to: Acronym.self) { acronym in
-                return acronym.save(on: req)
-        }
-    }
-    
-    router.post("api", "acronyms", "create") { req -> Future<Acronym> in
-        let acronym: Acronym = Acronym(short: "LOL", long: "Laughing out loud")
-        return acronym.create(on: req)
-    }
-    
-    router.get("api", "acronyms") { req in
-        return Acronym.query(on: req).all()
-    }
-    
 }
