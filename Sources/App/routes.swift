@@ -19,4 +19,8 @@ public func routes(_ router: Router) throws {
         }
     }
     
+    router.get("api", "acronyms") { req in
+        return Acronym.query(on: req).all()
+    }
+    
 }
