@@ -19,6 +19,11 @@ public func routes(_ router: Router) throws {
         }
     }
     
+    router.post("api", "acronyms", "create") { req -> Future<Acronym> in
+        let acronym: Acronym = Acronym(short: "LOL", long: "Laughing out loud")
+        return acronym.create(on: req)
+    }
+    
     router.get("api", "acronyms") { req in
         return Acronym.query(on: req).all()
     }
