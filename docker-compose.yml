@@ -1,0 +1,24 @@
+# 1
+version: '3'
+# 2
+services:
+  # 3
+  til-app:
+    # 4
+    depends_on:
+      - postgres
+    # 5
+    build: .
+    # 6
+    environment:
+      - DATABASE_HOSTNAME=postgres
+      - DATABASE_PORT=5432
+  # 7
+  postgres:
+    # 8
+    image: "postgres"
+    # 9
+    environment:
+      - POSTGRES_DB=vapor-test
+      - POSTGRES_USER=vapor
+      - POSTGRES_PASSWORD=password
