@@ -1,18 +1,8 @@
-<!DOCTYPE html>
-#// 1
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  #// 2
-  <title>#(title) | Acronyms</title>
-</head>
-<body>
-  #// 3
+#set("content") {
   <h1>#(acronym.short)</h1>
-  #// 4
   <h2>#(acronym.long)</h2>
+  
+<p> Created by <a href="/users/#(user.id)/">#(user.name)</a></p>
+}
 
-  #// 5
-  <p>Created by #(user.name)</p>
-</body>
-</html>
+#embed("base")
