@@ -1,0 +1,59 @@
+#// 1
+#set("content") {
+  <h1>#(title)</h1>
+
+  #// 2
+  <form method="post">
+    #// 3
+    <div class="form-group">
+      <label for="short">Acronym</label>
+      <input type="text" name="short" class="form-control"
+          id="short" #if(editing){value="#(acronym.short)"}/>
+    </div>
+
+    #// 4
+    <div class="form-group">
+      <label for="long">Meaning</label>
+      <input type="text" name="long" class="form-control"
+      id="long" #if(editing){value="#(acronym.long)"}/>
+    </div>
+
+    <div class="form-group">
+      <label for="userID">User</label>
+      #// 5
+      <select name="userID" class="form-control" id="userID">
+        #// 6
+        #for(user in users) {
+        <option value="#(user.id)" #if(editing){#if(acronym.usedID == user.id){selected}}>
+            #(user.name)
+          </option>
+        }
+        </select>
+            </div>
+
+        #// 7
+        #// 1
+        <div class="form-group">
+          #// 2
+          <label for="categories">Categories</label>
+          #// 3
+          <select name="categories[]" class="form-control"
+           id="categories" placeholder="Categories" multiple="multiple">
+           #if(editing) {
+             #// 1
+             #for(category in categories) {
+               #// 2
+               <option value="#(category.name)" selected="selected">
+                 #(category.name)
+               </option>
+             }
+           }
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            #if(editing){Update} else{Submit}
+        </button>
+      </form>
+    }
+
+    #embed("base")
