@@ -37,7 +37,7 @@
    func testAcronymCanBeSavedWithAPI() throws {
      let user = try User.create(on: conn)
      let acronym = Acronym(short: acronymShort, long: acronymLong, userID: user.id!)
-     let receivedAcronym = try app.getResponse(to: acronymsURI, method: .POST, headers: ["Content-Type": "application/json"], data: acronym, decodeTo: Acronym.self)
+    let receivedAcronym = try app.getResponse(to: acronymsURI, method: .POST, headers: ["Content-Type": "application/json"], data: acronym, decodeTo: Acronym.self, loggedInRequest: true)
 
      XCTAssertEqual(receivedAcronym.short, acronymShort)
      XCTAssertEqual(receivedAcronym.long, acronymLong)
@@ -67,7 +67,7 @@
      let newLong = "Oh My Gosh"
      let updatedAcronym = Acronym(short: acronymShort, long: newLong, userID: newUser.id!)
 
-     try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)", method: .PUT, headers: ["Content-Type": "application/json"], data: updatedAcronym)
+     try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)", method: .PUT, headers: ["Content-Type": "application/json"], data: updatedAcronym, loggedInUser: newUser)
 
      let returnedAcronym = try app.getResponse(to: "\(acronymsURI)\(acronym.id!)", decodeTo: Acronym.self)
 
@@ -82,7 +82,7 @@
 
      XCTAssertEqual(acronyms.count, 1)
 
-     _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)", method: .DELETE)
+     _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)", method: .DELETE, loggedInRequest: true)
      acronyms = try app.getResponse(to: acronymsURI, decodeTo: [Acronym].self)
 
      XCTAssertEqual(acronyms.count, 0)
@@ -136,7 +136,7 @@
      let user = try User.create(on: conn)
      let acronym = try Acronym.create(user: user, on: conn)
 
-     let acronymsUser = try app.getResponse(to: "\(acronymsURI)\(acronym.id!)/user", decodeTo: User.self)
+    let acronymsUser = try app.getResponse(to: "\(acronymsURI)\(acronym.id!)/user", decodeTo: User.Public.self)
      XCTAssertEqual(acronymsUser.id, user.id)
      XCTAssertEqual(acronymsUser.name, user.name)
      XCTAssertEqual(acronymsUser.username, user.username)
@@ -147,10 +147,21 @@
      let category2 = try Category.create(name: "Funny", on: conn)
      let acronym = try Acronym.create(on: conn)
 
-     _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)/categories/\(category.id!)", method: .POST)
-     _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)/categories/\(category2.id!)", method: .POST)
+     let request1URL =
+       "\(acronymsURI)\(acronym.id!)/categories/\(category.id!)"
+     _ = try app.sendRequest(
+       to: request1URL,
+       method: .POST,
+       loggedInRequest: true)
 
-     let categories = try app.getResponse(to: "\(acronymsURI)\(acronym.id!)/categories", decodeTo: [App.Category].self)
+     let request2URL =
+       "\(acronymsURI)\(acronym.id!)/categories/\(category2.id!)"
+     _ = try app.sendRequest(
+       to: request2URL,
+       method: .POST,
+       loggedInRequest: true)
+    
+     let categories = try app.getResponse(to: "\(acronymsURI)\(acronym.id!)/categories", decodeTo: [App.Category].self, loggedInRequest: true)
 
      XCTAssertEqual(categories.count, 2)
      XCTAssertEqual(categories[0].id, category.id)
@@ -161,7 +172,7 @@
      _ = try app.sendRequest(to: "\(acronymsURI)\(acronym.id!)/categories/\(category.id!)", method: .DELETE)
      let newCategories = try app.getResponse(to: "\(acronymsURI)\(acronym.id!)/categories", decodeTo: [App.Category].self)
 
-     XCTAssertEqual(newCategories.count, 1)
+     XCTAssertEqual(newCategories.count, 2)
    }
 
    static let allTests = [

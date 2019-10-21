@@ -62,7 +62,7 @@
 
    func testCategoryCanBeSavedWithAPI() throws {
      let category = Category(name: categoryName)
-     let receivedCategory = try app.getResponse(to: categoriesURI, method: .POST, headers: ["Content-Type": "application/json"], data: category, decodeTo: Category.self)
+    let receivedCategory = try app.getResponse(to: categoriesURI, method: .POST, headers: ["Content-Type": "application/json"], data: category, decodeTo: Category.self, loggedInRequest: true)
 
      XCTAssertEqual(receivedCategory.name, categoryName)
      XCTAssertNotNil(receivedCategory.id)
@@ -90,8 +90,21 @@
 
      let category = try Category.create(name: categoryName, on: conn)
 
-     _ = try app.sendRequest(to: "/api/acronyms/\(acronym.id!)/categories/\(category.id!)", method: .POST)
-     _ = try app.sendRequest(to: "/api/acronyms/\(acronym2.id!)/categories/\(category.id!)", method: .POST)
+     let acronym1URL =
+       "/api/acronyms/\(acronym.id!)/categories/\(category.id!)"
+
+     _ = try app.sendRequest(
+       to: acronym1URL,
+       method: .POST,
+       loggedInRequest: true)
+
+     let acronym2URL =
+       "/api/acronyms/\(acronym2.id!)/categories/\(category.id!)"
+
+     _ = try app.sendRequest(
+       to: acronym2URL,
+       method: .POST,
+       loggedInRequest: true)
 
      let acronyms = try app.getResponse(to: "\(categoriesURI)\(category.id!)/acronyms", decodeTo: [Acronym].self)
 
