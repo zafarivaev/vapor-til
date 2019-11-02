@@ -85,3 +85,11 @@ struct AdminUser: Migration {
         return .done(on: connection)
     }
 }
+
+extension User: PasswordAuthenticatable {
+    
+}
+
+extension User: SessionAuthenticatable {
+    
+}
