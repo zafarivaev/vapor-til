@@ -50,6 +50,13 @@
               Create An Acronym
             </a>
           </li>
+          #if(!userLoggedIn) {
+            #// 2
+            <li class="nav-item #if(title == "Register"){active}">
+              #// 3
+              <a href="/register" class="nav-link">Register</a>
+            </li>
+          }
                 </ul>
         #if(userLoggedIn) {
         <form class="form-inline" action="/logout" method="POST">
