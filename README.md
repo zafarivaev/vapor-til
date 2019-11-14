@@ -22,6 +22,6 @@
 
 <p align="center">
     
-    Link to web-app: <a hred="https://til-by-zafar.herokuapp.com">https://til-by-zafar.herokuapp.com</a>
+    Link to web-app: <a href="https://til-by-zafar.herokuapp.com">https://til-by-zafar.herokuapp.com</a>
     
 </p>
